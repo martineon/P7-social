@@ -6,7 +6,7 @@ import {
   BrowserRouter as Router,
   Route,
   Link
-} from 'react-router-dom'
+} from 'react-router'
 
 ReactDOM.render(
   <App />,

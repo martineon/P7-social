@@ -1,5 +1,6 @@
 const express = require('express'),
 	  path = require('path'),
+	  mongoose = require('mongoose'),
       http = require('http'),
       passport = require('passport'),
 	  html = require('html'),
@@ -9,6 +10,7 @@ const express = require('express'),
       session = require('express-session'),
       methodOverride = require('method-override'),
 	  app = express(),
+	  User = require('./models/users');
       port = process.env.PORT || 8080;
 
 
@@ -22,15 +24,42 @@ app.use(session({ secret: 'keyboard cat', name: 'id' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-var LINKEDIN_API_KEY = "77z6i13ivps0pq";
-var LINKEDIN_SECRET_KEY = "3yynGlqLel1da9bq";
+mongoose.connect('mongodb://admin:admin@ds151127.mlab.com:51127/p7-social');
+
+
+
+
 
 
 app.use( express.static( path.join(__dirname, '../client/build/') ) );
 
 
+
+
 app.get('/login', (req, res) => {
 	res.send('Login');
+})
+
+// See all users
+.get('/users', (req, res) => {
+	User.find({}, (err, users) => {
+		if (err) throw err;
+
+		res.json(users);
+	});
+})
+
+// User can register
+.post('/subscribe', (req, res) => {
+	let newUser = User({
+		username: req.body.name,
+		password: req.body.password
+	});
+	newUser.save( err => {
+		if (err) throw err;
+
+		res.send('new user signed up');
+	});
 })
 
 .get('/auth/linkedin', (req, res) => {
@@ -41,9 +70,8 @@ app.get('/login', (req, res) => {
 	res.send('token is ok');
 })
 
-.get('/*', (req, res) => {
+app.get('/*', (req, res) => {
 	res.sendFile(path.join(__dirname + '/../client/build/index.html'));
-	// res.send('coucou');
 })
 
 .listen(port, (err) => {
