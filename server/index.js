@@ -59,7 +59,7 @@ app.get('/login', (req, res) => {
 		if (err) throw err;
 
 		res.send('new user signed up');
-	});
+	})
 })
 
 .get('/auth/linkedin', (req, res) => {
