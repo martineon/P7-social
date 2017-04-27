@@ -10,6 +10,7 @@ const express = require('express'),
       session = require('express-session'),
       methodOverride = require('method-override'),
 	  app = express(),
+	  bcrypt = require('bcrypt-nodejs'),
 	  User = require('./models/users');
       port = process.env.PORT || 8080;
 
@@ -26,18 +27,28 @@ app.use(passport.session());
 
 mongoose.connect('mongodb://admin:admin@ds151127.mlab.com:51127/p7-social');
 
-
-
-
-
-
 app.use( express.static( path.join(__dirname, '../client/build/') ) );
 
 
+app.post('/signin', (req, res) => {
+	const activeUser = req.body.username;
+	const activeUserPwd = req.body.password;
 
+	User.find({username: activeUser}, (err, user) => {
+		if (err) console.log(err);
 
-app.get('/login', (req, res) => {
-	res.send('Login');
+		if (user.length > 0) {
+			if (bcrypt.compareSync(activeUserPwd, user[0].password)) {
+				res.send('Bien ouej');
+			}
+			else {
+				res.redirect('/');
+			}
+		}
+		else {
+			res.redirect('/');
+		}
+	});
 })
 
 // See all users
@@ -50,16 +61,22 @@ app.get('/login', (req, res) => {
 })
 
 // User can register
-.post('/subscribe', (req, res) => {
-	let newUser = User({
-		username: req.body.name,
+.post('/signup', (req, res) => {
+	let newUser = new User({
+		username: req.body.username,
+		email: req.body.email,
 		password: req.body.password
 	});
-	newUser.save( err => {
-		if (err) throw err;
-
-		res.send('new user signed up');
-	})
+	newUser.save(function(err) {
+		if (err) {
+			console.log('err', err);
+			if (err.code == 11000)
+				return res.json({success: false, message: "L'utilisateur existe déjà"});
+			else
+				return res.send(err);
+			}
+		res.json({message: "L'utilisateur est dans la place"});
+	});
 })
 
 .get('/auth/linkedin', (req, res) => {

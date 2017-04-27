@@ -127,7 +127,7 @@ class Login extends Component {
           <ConnectTitle Color={this.state.Color}>
             {this.state.wantLogIn? 'Log In' : 'Sign In'}
           </ConnectTitle>
-          <ConnectForm action={this.state.wantLogIn? '/login' : '/signin'} method='post' >
+          <ConnectForm action={this.state.wantLogIn? '/signin' : '/signup'} method='post' >
 
             <ConnectInput name='username' placeholder='Username' Color='#fff'/>
 
