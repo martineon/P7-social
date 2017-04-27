@@ -43,7 +43,7 @@ const ConnectWrapper = styled.div`
   top: 0;
   left:0;
   position: fixed;
-  background-color: rgba(109, 109, 89, 0.63);
+  background-color: rgba(117, 117, 117, 0.34);
   display: ${props => props.isClicked? 'flex' : 'none'};
   justify-content: center;
   align-items: center;
@@ -103,7 +103,7 @@ class Login extends Component {
     super(props);
     this.state = {
       isLoginClicked : false,
-      Color: 'rgb(86, 215, 142)',
+      Color: '#009688',
       wantLogIn: true
     }
   }
