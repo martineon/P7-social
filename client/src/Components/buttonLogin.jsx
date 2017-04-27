@@ -81,7 +81,7 @@ const CloseIcon = styled.a`
 const ConnectTitle = styled.h1`
   font-size: 80px;
   color: white;
-  font-weight: 300
+  font-weight: 300;
 `;
 const ConnectForm = styled.form`
   width: auto;
